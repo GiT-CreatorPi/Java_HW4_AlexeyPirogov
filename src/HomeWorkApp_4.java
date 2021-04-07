@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class HomeWorkApp_4 {
 
     public static int SIZE = 3;
-    public static int DIFICULT = 0;
-    public static int LEN_WIN_LINE = SIZE - DIFICULT;
+    public static int DIFFICULT = 0;
+    public static int LEN_WIN_LINE = SIZE - DIFFICULT;
     public static char[][] MAP;
     public static int[] CELL_YX = new int[2];
     public static Scanner in = new Scanner(System.in);
@@ -36,8 +36,8 @@ public class HomeWorkApp_4 {
             if (SIZE != 3) {
                do {
                    System.out.print("Выберите размер выигрышной серии: 0 - равна размерности игрового поля (" + SIZE + "), 1 - на единицу меньше (" + (SIZE - 1) + ") : ");
-                   DIFICULT = in.nextInt();
-                   if (DIFICULT == 0 || DIFICULT == 1) break;
+                   DIFFICULT = in.nextInt();
+                   if (DIFFICULT == 0 || DIFFICULT == 1) break;
                } while (true);
            }
 
@@ -77,10 +77,12 @@ public class HomeWorkApp_4 {
        System.out.print("\nХорошего дня! Спасибо за игру! :)\n\n");
     }
 
+    //--------- Описание методов используемых в игре --------
+
     //Метод для выдления памяти под матрицу игрового поля и её инициализации
     public static void createMatrix(int maxLen) {
         //инициализация переменных при повторном игровом цикле
-        LEN_WIN_LINE = SIZE - DIFICULT;
+        LEN_WIN_LINE = SIZE - DIFFICULT;
         COUNTER_HUMAN_STEPS = 0;
         COUNTER_COMPUTER_STEPS = 0;
         HUMAN_WINNER = false;
@@ -118,7 +120,7 @@ public class HomeWorkApp_4 {
                 CELL_YX[i] = in.nextInt();
                 CELL_YX[i]--;
             }
-            regular = chechDot(false);  //проверка ячейки на возможность хода, диалог с пользователем, если ход невозможен
+            regular = checkDot(false);  //проверка ячейки на возможность хода, диалог с пользователем, если ход невозможен
             if (regular) {      //установка X, если ход человека удался
                 MAP[CELL_YX[0]][CELL_YX[1]] = DOT_X;
                 COUNTER_HUMAN_STEPS++;    //инкремент числа шагов
@@ -134,7 +136,7 @@ public class HomeWorkApp_4 {
         do {
             CELL_YX[0] = (int) (Math.random() * SIZE);   // получение случайного числа для Y
             CELL_YX[1] = (int) (Math.random() * SIZE);   // получение случайного числа для X
-            condition = chechDot(true); // вызов метода без вывода на печать информации о логике хода компьютера
+            condition = checkDot(true); // вызов метода без вывода на печать информации о логике хода компьютера
             if (condition) {      //установка true (DOT_O), если ход компьютера удался
                 MAP[CELL_YX[0]][CELL_YX[1]] = DOT_O;
                 System.out.print(" в ячейку: " + (CELL_YX[0] + 1) + " " + (CELL_YX[1] + 1) + "\n");   //информирование о ходе компьютера
@@ -145,7 +147,7 @@ public class HomeWorkApp_4 {
     }
 
     //Метод для проверки возможность хода в ячейку, на занятость ячейки
-    public static boolean chechDot(boolean stepPC) {
+    public static boolean checkDot(boolean stepPC) {
         boolean result = false; //переменные для хранения корректности хода и результата хода
         //Усл. № 1. Провекра принадлежности введённых значений множетству допустимых значений
         if (!(CELL_YX[0] >= 0 && CELL_YX[0] <= (SIZE - 1) && CELL_YX[1] >= 0 && CELL_YX[1] <= (SIZE - 1))) {  //информирование человека, что введены некорректные коррдинаты. Не выполняется для хода PC
@@ -165,11 +167,11 @@ public class HomeWorkApp_4 {
     //По требованиям задачи требуется реализовать метод в виде циклов.
     public static void checkWinner() {
         //Переменные для хранения сумм выигрышных комбинаций по строкам и столбцам для человека
-        int sumRowHuman = 0, sumColmnHuman = 0, sumDiaHuman = 0, sumSDiaHuman = 0, sumHDiaHuman = 0, sumLDiaHuman = 0, sumSHDiaHuman = 0, sumSLDiaHuman = 0;
+        int sumRowHuman = 0, sumColumnHuman = 0, sumDiaHuman = 0, sumSDiaHuman = 0, sumHDiaHuman = 0, sumLDiaHuman = 0, sumSHDiaHuman = 0, sumSLDiaHuman = 0;
         //Константа для хранения признака выигрыша человека
         int checkWinHuman = LEN_WIN_LINE * DOT_2;
         //Переменные для хранения сумм выигрышных комбинаций по строкам и столбцам для компьютера
-        int sumRowPC = 0, sumColmnPC = 0, sumDiaPC = 0, sumSDiaPC = 0, sumHDiaPC = 0, sumLDiaPC = 0, sumSHDiaPC = 0, sumSLDiaPC = 0;
+        int sumRowPC = 0, sumColumnPC = 0, sumDiaPC = 0, sumSDiaPC = 0, sumHDiaPC = 0, sumLDiaPC = 0, sumSHDiaPC = 0, sumSLDiaPC = 0;
         //Константа для хранения признака выигрыша компьютера
         int checkWinPC = LEN_WIN_LINE * DOT_4;
         //Переменные для расчёта ничей
@@ -244,21 +246,21 @@ public class HomeWorkApp_4 {
                 for (int i = 0; i < LEN_WIN_LINE; i++) {     //цикл по строкам/столбцам
                     for (int j = 0; j < LEN_WIN_LINE; j++) {     //цикл по столбцам/строкам. Строгое ограничение справа, а то адресация элемента с адреоом SIZE!!!
                         if (MAP[i][j] == DOT_X) sumRowHuman += DOT_2;    //расчёт ссумм X и O по строкам и столбцам
-                        if (MAP[j][i] == DOT_X) sumColmnHuman += DOT_2;
+                        if (MAP[j][i] == DOT_X) sumColumnHuman += DOT_2;
                         if (MAP[i][j] == DOT_O) sumRowPC += DOT_4;
-                        if (MAP[j][i] == DOT_O) sumColmnPC += DOT_4;
+                        if (MAP[j][i] == DOT_O) sumColumnPC += DOT_4;
                     }
                     //Проверка выигрыша для человека. Выигрыш достигается если суммма по строкам или столбцам равна константе checkWinHuman
-                    if ((sumRowHuman == checkWinHuman) || (sumColmnHuman == checkWinHuman)) HUMAN_WINNER = true;
+                    if ((sumRowHuman == checkWinHuman) || (sumColumnHuman == checkWinHuman)) HUMAN_WINNER = true;
                     //Проверка выигрыша для компьютера. Выигрыш достигается если суммма по строкам или столбцам равна константе checkWinPC
-                    if ((sumRowPC == checkWinPC) || (sumColmnPC == checkWinPC)) PC_WINNER = true;
+                    if ((sumRowPC == checkWinPC) || (sumColumnPC == checkWinPC)) PC_WINNER = true;
 
                     //Сброс переменных в ноль на каждой из итераций счётчика k для предотвращения ложной установки флага humanWinner
                     if (sumRowHuman != checkWinHuman) sumRowHuman = 0;
-                    if (sumColmnHuman != checkWinHuman) sumColmnHuman = 0;
+                    if (sumColumnHuman != checkWinHuman) sumColumnHuman = 0;
                     //Сброс переменных в ноль на каждой из итераций счётчика k для предотвращения ложной установки флага pcWinner
                     if (sumRowPC != checkWinPC) sumRowPC = 0;
-                    if (sumColmnPC != checkWinPC) sumColmnPC = 0;
+                    if (sumColumnPC != checkWinPC) sumColumnPC = 0;
                 }
             } else { //если нет равенства выигрышной комбинации и размерности используемого игрового поля, то расчёт выигрышных комбинация в SIZE -1
 
@@ -274,21 +276,21 @@ public class HomeWorkApp_4 {
                             //Перебор элементов строк и столбцов
                             for (int j = 0; j < LEN_WIN_LINE; j++) {    // Цикл по столбцам/строкм. Адресация по типу сегмент + смещение + перебор строк + перебор элементов
                                 if (MAP[k + i][l + j] == DOT_X) sumRowHuman += DOT_2;  //расчёт ссумм X и O по строкам и столбцам
-                                if (MAP[l + j][k + i] == DOT_X) sumColmnHuman += DOT_2;
+                                if (MAP[l + j][k + i] == DOT_X) sumColumnHuman += DOT_2;
                                 if (MAP[k + i][l + j] == DOT_O) sumRowPC += DOT_4;
-                                if (MAP[l + j][k + i] == DOT_O) sumColmnPC += DOT_4;
+                                if (MAP[l + j][k + i] == DOT_O) sumColumnPC += DOT_4;
                                 //Проверка выигрыша осуществляется вконце цикла по строкам/столбцам (вконце цикла j)
                                 //Проверка выигрыша для человека. Выигрыш достигается если суммма по строкам или столбцам равна константе checkWinHuman
-                                if ((sumRowHuman == checkWinHuman) || (sumColmnHuman == checkWinHuman)) HUMAN_WINNER = true;
+                                if ((sumRowHuman == checkWinHuman) || (sumColumnHuman == checkWinHuman)) HUMAN_WINNER = true;
                                 //Проверка выигрыша для компьютера. Выигрыш достигается если суммма по строкам или столбцам равна константе pcWinner
-                                if ((sumRowPC == checkWinPC) || (sumColmnPC == checkWinPC)) PC_WINNER = true;
+                                if ((sumRowPC == checkWinPC) || (sumColumnPC == checkWinPC)) PC_WINNER = true;
                             }
                             //Сброс накопительных переменных в ноль на каждой новой итераций счётчика i для предотвращения ложной установки флага humanWinner
                             if (sumRowHuman != checkWinHuman) sumRowHuman = 0;
-                            if (sumColmnHuman != checkWinHuman) sumColmnHuman = 0;
+                            if (sumColumnHuman != checkWinHuman) sumColumnHuman = 0;
                             //Сброс накопительных переменных в ноль на каждой новой итераций счётчика i для предотвращения ложной установки флага pcWinner
                             if (sumRowPC != checkWinPC) sumRowPC = 0;
-                            if (sumColmnPC != checkWinPC) sumColmnPC = 0;
+                            if (sumColumnPC != checkWinPC) sumColumnPC = 0;
                         }
                     }
                 }
